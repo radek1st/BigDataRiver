@@ -1,0 +1,50 @@
+version: '3'
+services:
+  falcon:
+    build: ./falcon
+    ports:
+     - "8000:8000"
+    links:
+     - kafka
+     - cassandra
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: "wurstmeister/kafka:0.10.2.0"
+    ports:
+     - "9092:9092"
+    hostname: kafka
+    links: 
+     - zookeeper
+    environment:
+     - KAFKA_ADVERTISED_HOST_NAME=kafka
+     - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+     - KAFKA_ADVERTISED_PORT=9092
+  spark:
+    image: "jupyter/pyspark-notebook"
+    command: "start-notebook.sh --NotebookApp.token=''"
+    volumes:
+     - /Users/radek/workspace/BigDataRiver/spark:/home/jovyan/work
+     - /Users/radek/workspace/BigDataRiver/data:/home/jovyan/work/data
+     - /Users/radek/.ivy2:/home/jovyan/.ivy2
+    ports:
+     - "8888:8888"
+     - "4040:4040"
+     - "4041:4041"
+    links:
+     - kafka
+     - cassandra
+  cassandra:
+    image: "cassandra:3"
+    volumes:
+     - /Users/radek/workspace/BigDataRiver/cassandra:/bdr
+     - /Users/radek/workspace/BigDataRiver/data:/data
+    ports:
+     - "7000:7000"
+     - "7001:7001" 
+     - "7199:7199"
+     - "9042:9042"
+     - "9160:9160"
+

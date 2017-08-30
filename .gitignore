@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+data/spark-warehouse
+data/train.csv.gz
+data/.ipynb_checkpoints
+spark/.ipynb_checkpoints
+spark/data
+spark/metastore_db
+spark/output
+spark/checkpoint
+spark/derby.log
+spark/spark-warehouse
