@@ -53,7 +53,7 @@ class BdrResource:
           specific_rows = session.execute(specific_lookup, [specific])
 	  rows = session.execute(specific_lookup, [specific])
           resp.status = falcon.HTTP_200
-          result = ""
+          result = "[]"
           for row in rows:
             result = row.top_products
             break
@@ -65,7 +65,7 @@ class BdrResource:
           generic_rows = session.execute(generic_lookup, [generic])
 	  rows = session.execute(generic_lookup, [generic])
           resp.status = falcon.HTTP_200
-          result = ""
+          result = "[]"
           for row in rows:
             result = row.top_products
             break
@@ -77,7 +77,7 @@ class BdrResource:
 	  rows = session.execute(product_lookup, [product])
 	  #TODO: deal appropriately if the product doesn't exist in cassandra
 	  resp.status = falcon.HTTP_200
-          result = ""
+          result = "[]"
           for row in rows:
             result = row.other_products
             break
@@ -88,7 +88,7 @@ class BdrResource:
 	  user_lookup.consistency_level = ConsistencyLevel.ONE
           rows = session.execute(user_lookup, [user])
           resp.status = falcon.HTTP_200
-          result = ""
+          result = "[]"
           for row in rows:
             result = row.recommended_products
             break
