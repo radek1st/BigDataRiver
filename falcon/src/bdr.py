@@ -46,41 +46,36 @@ class BdrResource:
 
 	input = falcon.uri.parse_query_string(req.query_string)
 	print('input = {}'.format(input))
-        if 'specific_category' in input:
-          specific = int(input['specific_category'])
-          specific_lookup = session.prepare("SELECT top_products FROM top_specific WHERE specific_cat=?")
-          specific_lookup.consistency_level = ConsistencyLevel.ONE
-          specific_rows = session.execute(specific_lookup, [specific])
-	  rows = session.execute(specific_lookup, [specific])
-          resp.status = falcon.HTTP_200
-          result = "[]"
-          for row in rows:
-            result = row.top_products
-            break
-          resp.body = json.dumps({"specific_category":specific, "recommendedProducts":result}, encoding='utf-8')
-        elif 'generic_category' in input:
-          generic = int(input['generic_category'])
-          generic_lookup = session.prepare("SELECT top_products FROM top_generic WHERE generic_cat=?")
-          generic_lookup.consistency_level = ConsistencyLevel.ONE
-          generic_rows = session.execute(generic_lookup, [generic])
-	  rows = session.execute(generic_lookup, [generic])
-          resp.status = falcon.HTTP_200
-          result = "[]"
-          for row in rows:
-            result = row.top_products
-            break
-          resp.body = json.dumps({"generic_category":generic, "recommendedProducts":result}, encoding='utf-8')
-        elif 'product' in input:
-	  product = int(input['product'])
-	  product_lookup = session.prepare("SELECT other_products FROM top_other_products WHERE product=?")
+        if 'product-kappa' in input:
+	  product = int(input['product-kappa'])
+	  product_lookup = session.prepare("SELECT other_products FROM top_other_products_kappa WHERE product=?")
 	  product_lookup.consistency_level = ConsistencyLevel.ONE
 	  rows = session.execute(product_lookup, [product])
-	  #TODO: deal appropriately if the product doesn't exist in cassandra
 	  resp.status = falcon.HTTP_200
-          result = "[]"
-          for row in rows:
-            result = row.other_products
-            break
+          result = []
+          if rows:
+            result = rows[0].other_products
+          resp.body = json.dumps({"product":product, "recommendedProducts":result}, encoding='utf-8')
+        elif 'product-lambda' in input:
+	  product = int(input['product-lambda'])
+	  stream_lookup = session.prepare("SELECT other_products FROM top_other_products_stream WHERE product=?")
+	  stream_lookup.consistency_level = ConsistencyLevel.ONE
+	  stream_rows = session.execute(stream_lookup, [product])
+	  batch_lookup = session.prepare("SELECT other_products FROM top_other_products_batch WHERE product=?")
+	  batch_lookup.consistency_level = ConsistencyLevel.ONE
+	  batch_rows = session.execute(batch_lookup, [product])
+	  resp.status = falcon.HTTP_200
+          result = []
+          if batch_rows and stream_rows:
+  	    merged = []
+            for x in (batch_rows[0].other_products + stream_rows[0].other_products):
+              if x not in merged:
+                merged.append(x)
+            result = merged[:5]
+          elif batch_rows:
+            result = batch_rows[0].other_products          
+          elif stream_rows:
+            result = stream_rows[0].other_products          
           resp.body = json.dumps({"product":product, "recommendedProducts":result}, encoding='utf-8')
         elif 'user' in input:
           user = int(input['user'])
@@ -88,14 +83,13 @@ class BdrResource:
 	  user_lookup.consistency_level = ConsistencyLevel.ONE
           rows = session.execute(user_lookup, [user])
           resp.status = falcon.HTTP_200
-          result = "[]"
-          for row in rows:
-            result = row.recommended_products
-            break
+          result = []
+          if rows:
+            result = rows[0].recommended_products
           resp.body = json.dumps({"user":user, "recommendedProducts":result}, encoding='utf-8')
 	else:
           resp.status = falcon.HTTP_400
-          resp.body = '{"error": "Parameter *product*,  *user*, *specific_category* or *generic_category* must be provided in the query string"}'
+          resp.body = '{"error": "Parameter *product-lambda*, *product-kappa* or *user* must be provided in the query string"}'
 
     @request_schema(post_request_schema)
     def on_post(self, req, resp):
