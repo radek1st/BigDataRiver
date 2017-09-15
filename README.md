@@ -30,8 +30,8 @@ For the ease of deployment Docker Compose script is used. It still needs some ma
 * Falcon
   * Once every gear is in motion, you can finally get the recommendations. Open a browser (or otherwise issue GET request) 
   to hit Falcon and get recommendations like this: 
-    * Lambda: `http://127.0.0.1:8000/bdr?product-lambda=59` should return response like `{"product":59, "recommendedProducts":"[29,49,99,19,62]"}`
-    * Kappa: `http://127.0.0.1:8000/bdr?product-kappa=41` should return response like `{"product":41, "recommendedProducts":"[21,5,95,83,37]"}`
+    * Lambda: `http://127.0.0.1:8000/bdr?product-lambda=59` should return response like `{"product":59, "recommendedProducts":[29,49,99,19,62]}`
+    * Kappa: `http://127.0.0.1:8000/bdr?product-kappa=41` should return response like `{"product":41, "recommendedProducts":[21,5,95,83,37]}`
     * Kappa Collaborative Filtering user customised recommendation: `http://127.0.0.1:8000/bdr?user=2105` with response like 
     `{"user":2105, "recommendedProducts":[77,5,95,83,37]}`
 
