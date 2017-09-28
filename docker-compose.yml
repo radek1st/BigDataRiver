@@ -28,7 +28,6 @@ services:
     volumes:
      - /Users/radek/workspace/BigDataRiver/spark:/home/jovyan/work
      - /Users/radek/workspace/BigDataRiver/data:/home/jovyan/work/data
-     - /Users/radek/.ivy2:/home/jovyan/.ivy2
     ports:
      - "8888:8888"
      - "4040:4040"
