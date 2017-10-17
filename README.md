@@ -4,7 +4,7 @@ for an imaginary e-commerce store. It is written in Python and employs Kafka, Sp
 All the components are tied in with Docker and their relationships are captured in `docker-compose`.   
 
 ## Presentation
-Here are the [slides](YowData-RadekOstrowski.pdf) from my presentation at [Yow! Data Sydney](http://data.yowconference.com.au/profile/?id=radek-ostrowski).
+Here are the [slides](YowData-RadekOstrowski.pdf) from my presentation at [Yow! Data Sydney](http://data.yowconference.com.au/profile/?id=radek-ostrowski) and [Sydney Docker Meetup](https://www.meetup.com/Sydney-Docker-User-Group/events/238792843/).
 
 ## Setup
 For the ease of deployment Docker Compose script is used. It still needs some manual steps, however.
