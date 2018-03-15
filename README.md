@@ -21,7 +21,7 @@ For the ease of deployment Docker Compose script is used. It still needs some ma
      * You can also run `cqlsh` and start issuing CQL statements directly against Cassandra
 * Spark Notebook
   * In a browser, navigate to `http://localhost:8888/` and choose `Lambda - Stream - Users who bought X also bought`.
-  Shift+Enter all the cells or choose from the top menu: Cell->Run All
+  Choose from the top menu: Cell->Run All
   * Once Spark Streaming is running and the data feeder is started, you should see the recommendation table become populated in Cassandra
   * Repeat the same for other notebooks if required:
     * `Lambda - Batch- Users who bought X also bought`
